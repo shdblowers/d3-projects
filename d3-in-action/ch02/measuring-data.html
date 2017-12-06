@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<meta charset="UTF-8">
+
+<head>
+  <script src="../../d3/d3.min.js"></script>
+</head>
+
+<body>
+  <script type="text/javascript">
+    const testArray = [88, 10000, 1, 75, 12, 35];
+
+    let minVal = d3.min(testArray, e => e)
+    let maxVal = d3.max(testArray, e => e)
+    let meanVal = d3.mean(testArray, e => e)
+    let extentRange = d3.extent(testArray, e => e)
+
+    console.log(minVal, maxVal, meanVal, extentRange)
+  </script>
+</body>
+
+</html>

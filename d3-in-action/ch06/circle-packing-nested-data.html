@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<meta charset="UTF-8">
+
+<head>
+  <script src="../../d3/d3.min.js"></script>
+</head>
+
+<body>
+  <svg style="width:600px;height:600px;"></svg>
+
+  <script type="text/javascript">
+    d3.json("../data/tweets.json", viz)
+
+    function viz(data) {
+      var depthScale =
+        d3.scaleOrdinal()
+          .range(["#5eafc6", "#fe9922", "#93c464", "#75739f"])
+
+      var nestedTweets =
+        d3.nest()
+          .key(d => d.user)
+          .entries(data.tweets)
+
+      // put the data into a top level root object
+      var packableTweets = { id: "All Tweets", values: nestedTweets }
+
+      // initialize layout
+      var packChart = d3.pack()
+
+      // set size of chart
+      packChart.size([500, 500])
+
+      var root =
+        d3.hierarchy(packableTweets, d => d.values)
+          .sum(() => 1)
+
+      d3.select("svg")
+        .append("g")
+        .attr("transform", "translate(100,20)")
+        .selectAll("cirlce")
+        .data(packChart(root).descendants())
+        .enter()
+        .append("circle")
+        .attr("r", d => d.r) // computed by pack layout
+        .attr("cx", d => d.x) // computed by pack layout
+        .attr("cy", d => d.y) // computed by pack layout
+        .style("fill", d => depthScale(d.depth))
+        .style("stroke", "black")
+    }
+  </script>
+</body>
+
+</html>

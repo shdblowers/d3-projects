@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<meta charset="UTF-8">
+
+<head>
+  <script src="../../d3/d3.min.js"></script>
+</head>
+
+<body>
+  <script type="text/javascript">
+    d3.csv("../data/cities.csv", cities => {
+      let populations = cities.map((city, index, cities) => {
+        return parseInt(city.population);
+      })
+
+      var colourRamp =
+        d3.scaleLinear()
+          .domain([d3.min(populations, e => e), d3.max(populations, e => e)])
+          .range(["blue", "red"])
+    })
+  </script>
+</body>
+
+</html>

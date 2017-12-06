@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<meta charset="UTF-8">
+
+<head>
+  <script src="../../d3/d3.min.js"></script>
+</head>
+
+<body>
+  <script type="text/javascript">
+    d3.csv("../data/cities.csv", (error, data) => {
+      if (error) {
+        console.error(error)
+
+      } else {
+        dataViz(data)
+      }
+    })
+
+    function dataViz(incomingData) {
+      d3.select("body")
+        .selectAll("div.cities") // empty selection
+        .data(incomingData) // bind data to selection
+        .enter() // how to respond when there's more data than DOM elements in selection
+        .append("div") // create element in current selections
+        .attr("class", "cities") // sets class of each newly created element
+        .html(d => d.label) // set content of created div
+    }
+  </script>
+</body>
+
+</html>
