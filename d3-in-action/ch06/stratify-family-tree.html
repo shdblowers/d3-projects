@@ -7,7 +7,9 @@
 </head>
 
 <body>
-  <svg></svg>
+  <div id="viz">
+    <svg style="width:600px;height:600px;"></svg>
+  </div>
 
   <script type="text/javascript">
     d3.csv("../data/family.csv", data => dataViz(data))
@@ -19,6 +21,54 @@
           .id(d => d.parent)(incomingData)
 
       console.log(hierachicalData)
+
+      var depthScale =
+        d3.scaleOrdinal()
+          .range(["#5eafc6", "#fe9922", "#93c464", "#75739f"])
+
+      var treeChart = d3.tree()
+      treeChart.size([500, 500])
+
+      var treeData = treeChart(hierachicalData).descendants()
+
+      console.log(treeData)
+
+      d3.select("svg")
+        .append("g")
+        .attr("id", "treeG")
+        .attr("transform", "translate(60,20)")
+        .selectAll("g")
+        .data(treeData)
+        .enter()
+        .append("g")
+        .attr("class", "node")
+        .attr("transform", d => `translate(${d.x},${d.y})`)
+
+
+      d3.selectAll("g.node")
+        .append("circle")
+        .attr("r", 10)
+        .style("fill", d => depthScale(d.depth))
+        .style("stroke", "white")
+        .style("stroke-width", "2px")
+
+      d3.selectAll("g.node")
+        .append("text")
+        .style("text-anchor", "middle")
+        .style("fill", "#4f442b")
+        .text(d => d.id)
+
+      d3.select("#treeG")
+        .selectAll("line")
+        .data(treeData.filter(d => d.parent))
+        .enter()
+        .insert("line", "g")
+        .attr("x1", d => d.parent.x)
+        .attr("y1", d => d.parent.y)
+        .attr("x2", d => d.x)
+        .attr("y2", d => d.y)
+        .style("stroke", "black")
+
     }
 
   </script>
